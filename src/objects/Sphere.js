@@ -16,7 +16,7 @@ class Sphere {
         if (texture) {
             const textureLoader = new TextureLoader()
             const sphereTexture = textureLoader.load(texture)
-            this.material = new MeshStandardMaterial({ map: sphereTexture, side: BackSide})
+            this.material = new MeshStandardMaterial({ map: sphereTexture/*, side: BackSide*/})
         } else {
             this.material = new MeshStandardMaterial({ color: color})
         }

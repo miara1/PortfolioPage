@@ -1,12 +1,19 @@
-import { Vector3 } from 'three'
+import { Vector3, Clock, Box3 } from 'three'
 
 class PlayerControls {
     constructor(object) {
 
         this.object = object.mesh
-        this.moveSpeed = 0.1
-        this.turnSpeed = 0.03
-        this.direction = new Vector3( 0, 0, -1 )
+        this.velocity = new Vector3( 0, 0, 0 )
+        this.acceleration = 40.0
+        this.maxSpeed = 10.0
+        this.frictionLinear = 0.90
+
+        this.angularVelocity = 0
+        this.angularAcceleration = 7.0
+        this.maxAngularSpeed = 1.5
+        this.frictionAngular = 0.90
+        
         this.keys = {
             w: false,
             a: false,
@@ -17,6 +24,8 @@ class PlayerControls {
             ArrowDown: false,
             ArrowRight: false
         }
+
+        this.clock = new Clock()
         this.setupEventListeners()
     }
 
@@ -38,27 +47,47 @@ class PlayerControls {
     }
 
     update() {
+        // Time in seconds since last frame
+        const deltaTime = this.clock.getDelta()
 
         // Robot rotation
         if( this.keys.a || this.keys.ArrowLeft ) {
-            this.object.rotation.y += this.turnSpeed
+            this.angularVelocity += this.angularAcceleration * deltaTime
         }
 
         if( this.keys.d || this.keys.ArrowRight ) {
-            this.object.rotation.y -= this.turnSpeed
+            this.angularVelocity -= this.angularAcceleration * deltaTime
         }
 
+        // Rotation speed limit
+        this.angularVelocity = Math.max( -this.maxAngularSpeed, Math.min( this.maxAngularSpeed, this.angularVelocity ) )
+
+        // Update robot orientation
+        this.object.rotation.y += this.angularVelocity * deltaTime
+
         // Calculating direction vector
-        this.direction.set( 0, 0, -1 ).applyEuler( this.object.rotation ) 
+        let direction = new Vector3( 0, 0, -1 )
+        direction.applyEuler( this.object.rotation ) 
 
         // Move forwards/backwards
         if( this.keys.w || this.keys.ArrowUp ) {
-            this.object.position.add( this.direction.clone().multiplyScalar( this.moveSpeed ) )
+           this.velocity.add( direction.clone().multiplyScalar( this.acceleration * deltaTime ) )
         }
 
         if( this.keys.s || this.keys.ArrowDown ) {
-            this.object.position.add( this.direction.clone().multiplyScalar( -this.moveSpeed ) )
+            this.velocity.add( direction.clone().multiplyScalar( -this.acceleration * deltaTime ) )
         }
+
+        // Speed limit
+        this.velocity.clampLength( 0, this.maxSpeed )
+
+        // Friction ( slowing down )
+        this.velocity.multiplyScalar( this.frictionLinear )
+        this.angularVelocity *= this.frictionAngular
+
+        // Update robot position
+        this.object.position.add( this.velocity.clone().multiplyScalar( deltaTime ) )
+
     }
 }
 
