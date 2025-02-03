@@ -1,9 +1,11 @@
 import { Vector3, Clock, Box3 } from 'three'
 
 class PlayerControls {
-    constructor(object) {
+    constructor( object, obstacles ) {
 
         this.object = object.mesh
+        this.obstacles = obstacles
+
         this.velocity = new Vector3( 0, 0, 0 )
         this.acceleration = 40.0
         this.maxSpeed = 10.0
@@ -46,6 +48,35 @@ class PlayerControls {
         })
     }
 
+    // Check for collision with specified obstacles
+    // If collision is detected returns true
+    // Else returns false
+    checkCollision( newPosition ) {
+
+        // Create Box3 for player
+        const playerBox = new Box3().setFromObject( this.object )
+        playerBox.translate( newPosition.clone().sub( this.object.position ) )
+
+        for( const obstacle of this.obstacles ) {
+
+            // Get obstacle mesh
+            const obstacleMesh = obstacle.mesh
+
+            // Check if obstacle has geometry
+            if (!obstacleMesh.geometry) {
+                console.warn('Obstacle has no geometry, skipping:', obstacle);
+                continue;
+            }
+
+            const obstacleBox = new Box3().setFromObject( obstacleMesh )
+            if( playerBox.intersectsBox( obstacleBox ) ) {
+                return true
+            }
+
+        }
+        return false
+    }
+
     update() {
         // Time in seconds since last frame
         const deltaTime = this.clock.getDelta()
@@ -67,7 +98,10 @@ class PlayerControls {
 
         // Calculating direction vector
         let direction = new Vector3( 0, 0, -1 )
-        direction.applyEuler( this.object.rotation ) 
+        direction.applyEuler( this.object.rotation )
+
+        // Temporary variable for calculating next position
+        let nextPosition = this.object.position.clone()
 
         // Move forwards/backwards
         if( this.keys.w || this.keys.ArrowUp ) {
@@ -85,8 +119,16 @@ class PlayerControls {
         this.velocity.multiplyScalar( this.frictionLinear )
         this.angularVelocity *= this.frictionAngular
 
+        // Calculating next position
+        nextPosition.add( this.velocity.clone().multiplyScalar( deltaTime ) )
+
+        // If no collision detected update robot position
+        if( !this.checkCollision( nextPosition ) ) {
+            this.object.position.copy( nextPosition )
+        }
+
         // Update robot position
-        this.object.position.add( this.velocity.clone().multiplyScalar( deltaTime ) )
+        // this.object.position.add( this.velocity.clone().multiplyScalar( deltaTime ) )
 
     }
 }
