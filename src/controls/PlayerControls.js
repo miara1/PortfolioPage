@@ -168,13 +168,21 @@ class PlayerControls {
             if (collision === "forward") {
                 // Move the player slightly backwards if collision is forward
                 this.velocity.set( 0, 0, 0 )
-                this.object.position.add(direction.clone().negate().multiplyScalar(0.1))
+                this.object.position.add(direction.clone().negate().multiplyScalar(0.25))
 
             } else if (collision === "backward") {
                  // Move the player slightly forward if collision is backward
                  this.velocity.set( 0, 0, 0 )
-                 this.object.position.add(direction.clone().multiplyScalar(0.1))
+                 this.object.position.add(direction.clone().multiplyScalar(0.25))
 
+            } else if( collision === "right" ) {
+                // Move playeer slightly left if collision is right
+                this.velocity.set( 0, 0, 0 )
+                this.object.position.add(new Vector3( -0.1, 0, 0.1 ).applyEuler(this.object.rotation))
+            } else if( collision === "left" ) {
+                // Move playeer slightly right if collision is left
+                this.velocity.set( 0, 0, 0 )
+                this.object.position.add(new Vector3( 0.1, 0, 0.1 ).applyEuler(this.object.rotation))
             } else {
                 this.velocity.reflect(direction)
                 this.velocity.multiplyScalar(1.5)
