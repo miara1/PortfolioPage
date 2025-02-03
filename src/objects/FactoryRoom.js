@@ -34,6 +34,8 @@ class FactoryEnvironment extends Scene {
        room.scale.set( 31.713, 28.305, 28.591 );
        this.add( room );
 
+       this.room = room
+
     //    const box1 = new Mesh( geometry, boxMaterial );
     //    box1.position.set( - 10.906, 2.009, 1.846 );
     //    box1.rotation.set( 0, - 0.195, 0 );
@@ -132,6 +134,10 @@ class FactoryEnvironment extends Scene {
 
        }
 
+   }
+
+   getRoom() {
+    return this.room
    }
 
 }
