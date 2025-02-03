@@ -41,7 +41,7 @@ scene.add( ambientLight )
 const backgroundTexture = new TextureLoader().load('../../static/Kosmos.bmp')
 scene.background = backgroundTexture
 
-// Dragging the screen
+// Orbit control
 const controls = new OrbitControls( camera, renderer.domElement )
 controls.enableRotate = false
 controls.enableZoom = false
@@ -61,7 +61,7 @@ function followRotationWithOrbit( objectMesh = null ) {
 }
 
 // Horizontal grid
-const gridHelper = new GridHelper(200, 50)
+const gridHelper = new GridHelper(400, 100)
 scene.add(gridHelper)
 
 export { 
