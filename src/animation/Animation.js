@@ -2,35 +2,26 @@ import {
     scene,
     camera,
     renderer,
-    followRotationWithOrbit
+    followRotationWithOrbit,
+    clock
 } from "../core/Core.js"
 
-import {
-    FactoryEnvironment
-} from "../objects/FactoryRoom.js"
-
 import { Cube } from "../objects/Cube.js"
-import { Sphere } from "../objects/Sphere.js"
-import { PlayerControls } from "../controls/PlayerControls.js"
+import { player } from "../objects/Player.js"
+import { sweeperOne, startRandomBots } from "./BotTravel.js"
 
-
-const segmentCount = 7
+const segmentCount = 2
 
 
 const cube = new Cube({color: "red", size: 1, position: {x: -4, y: 0, z: -10 * segmentCount}})
 const cube2 = new Cube({texture: "../../static/MojaTwarz.jpg", size: 1.5, position: {x: 4, y: 2, z:0}})
 
-const sphere = new Sphere({ texture: "/static/MojaTwarz.jpg", radius: 1.5, position: {x: 0, y: 2, z: 0}})
+const initObstacles = [ cube.mesh, cube2.mesh ]
 
-const factoryRoom = new FactoryEnvironment( renderer, segmentCount )
-const factoryMesh = factoryRoom.getRoom()
+player.addObstacles(initObstacles)
 
-const obstacles = [ cube.mesh, cube2.mesh ]
+startRandomBots()
 
-const player = new PlayerControls( sphere, obstacles, factoryMesh )
-
-cube.getPosition()
-cube2.getPosition()
 
 let i = 0
 
@@ -42,19 +33,15 @@ function animate() {
 
     cube.mesh.position.x += (50 - ((i++) % 101))/100;
 
-
-    // sphere.rotateY0.01)
-
     // Renderowanie sceny
     renderer.render(scene, camera)
 
     player.update()
-    followRotationWithOrbit( sphere.mesh )
+    followRotationWithOrbit( player.object )
 
-
-    // sphere.mesh.position.x += 0.03
-
-
+    // Update sweeper animations
+    sweeperOne.updateSweeperAnimation()
+    sweeperOne.makeSweeperMove()
 
     requestAnimationFrame(animate)
 }

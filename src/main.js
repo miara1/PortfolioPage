@@ -1,5 +1,5 @@
-import { animate } from "./animation/Animation.js"
+import { checkLoadModelThenAnimate } from "./objects/loadStaticGLTFModels"
 
 // Start animation
-animate()
+checkLoadModelThenAnimate()
 

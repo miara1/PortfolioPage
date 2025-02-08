@@ -5,18 +5,27 @@ import {
     AmbientLight, 
     PerspectiveCamera,
     WebGLRenderer,
-    Vector3
+    Vector3,
+    Clock
 } from 'three'
 import { OrbitControls } from '../controls/OrbitControls.js'
-// Tworzenie sceny
+import { GLTFLoader } from '../Loaders/GLTFLoader.js'
+
+// Create clock
+const clock = new Clock()
+
+// Create scene
 const scene = new Scene()
 
-// Tworzenie kamery
+// Create GLTF loader
+const gltfLoader = new GLTFLoader()
+
+// Create camera
 const camera = new PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000)
 camera.position.set( -5, -5, -5 )
 camera.lookAt( 0, 0, 0 )
 
-// Tworzenie renderera
+// Create renderer
 const canvas = document.querySelector("canvas.webgl")
 const renderer = new WebGLRenderer({ canvas })
 renderer.setSize(window.innerWidth, window.innerHeight)
@@ -33,8 +42,8 @@ function onWindowResize() {
 // Create resize event listener
 window.addEventListener('resize', onWindowResize)
 
-// Tworzenie świateł
-const ambientLight = new AmbientLight(0xffffff) // Światło otoczenia
+// Create lights
+const ambientLight = new AmbientLight(0xffffff) // ambient light
 scene.add( ambientLight )
 
 // Background texture
@@ -69,5 +78,7 @@ export {
     camera,
     renderer,
     controls,
+    clock,
+    gltfLoader,
     followRotationWithOrbit
 }

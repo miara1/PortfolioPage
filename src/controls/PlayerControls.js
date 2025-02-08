@@ -1,10 +1,11 @@
-import { Vector3, Clock, Box3, Raycaster } from 'three'
+import { Vector3, Box3, Raycaster } from 'three'
+import { clock } from '../core/Core'
 
 class PlayerControls {
-    constructor(object, obstacles, room) {
+    constructor(object, room) {
 
         this.object = object.mesh
-        this.obstacles = obstacles
+        this.obstacles = []
         this.room = room
 
         this.velocity = new Vector3(0, 0, 0)
@@ -31,7 +32,6 @@ class PlayerControls {
             ArrowRight: false
         }
 
-        this.clock = new Clock()
         this.setupEventListeners()
     }
 
@@ -98,7 +98,7 @@ class PlayerControls {
             raycaster.set(position, dir)
             const intersects = raycaster.intersectObject(this.room, true)
 
-            if (intersects.length > 0 && intersects[0].distance < 1.5) {
+            if (intersects.length > 0 && intersects[0].distance <= 1.5) {
                 return key
             }
 
@@ -108,7 +108,7 @@ class PlayerControls {
 
     update() {
         // Time in seconds since last frame
-        const deltaTime = this.clock.getDelta()
+        const deltaTime = clock.getDelta()
 
         // Robot rotation
         if (this.keys.a || this.keys.ArrowLeft) {
@@ -190,6 +190,19 @@ class PlayerControls {
 
         }
 
+    }
+
+    addObstacles( obstacle ) {
+        // Initialize obstaces tab if empty
+        if( !this.obstacles ) {
+            this.obstacles = []
+        }
+
+        // Obstacle is always converted to an array
+        ([]).concat.apply( obstacle ).forEach( obj => {
+            this.obstacles.push( obj )
+            console.log( "Obstacle added:", obj )
+        })
     }
 }
 
