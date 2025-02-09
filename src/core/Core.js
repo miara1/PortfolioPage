@@ -6,7 +6,8 @@ import {
     PerspectiveCamera,
     WebGLRenderer,
     Vector3,
-    Clock
+    Clock,
+    Raycaster
 } from 'three'
 import { OrbitControls } from '../controls/OrbitControls.js'
 import { GLTFLoader } from '../Loaders/GLTFLoader.js'
@@ -58,14 +59,46 @@ controls.enablePan = false;
 controls.maxPolarAngle = Math.PI / 2;
 controls.screenSpacePanning = true;
 
-function followRotationWithOrbit( objectMesh = null ) {
-    if( objectMesh ) {
-    const offset = new Vector3( 0, 5, 10 ); // Camera position behind object
-    offset.applyQuaternion(objectMesh.quaternion); // Rotate offset with camera rotation
-    camera.position.copy(objectMesh.position.clone().add(offset)); // New camera position
+// Create raycaster for collision detection
+const raycaster = new Raycaster();
+const rayOrigin = new Vector3(); // Ray start position
+const rayDirection = new Vector3(); // Ray direction
 
-    controls.target.copy(objectMesh.position); // Set `OrbitControls` for the object
-    controls.update(); // Update `OrbitControls`
+function followRotationWithOrbit( objectMesh = null, obstacle = null ) {
+    if( objectMesh ) {
+        const offset = new Vector3( 0, 5, 10 ); // Camera position behind object
+        offset.applyQuaternion(objectMesh.quaternion); // Rotate offset with camera rotation
+        
+        let newCameraPos = objectMesh.position.clone().add(offset); // New camera position
+
+        // Set raycaster for the camera to check for collision with the room
+        rayOrigin.copy( objectMesh.position );
+        rayDirection.copy(newCameraPos).sub(rayOrigin).normalize();
+        raycaster.set( rayOrigin, rayDirection );
+
+        //Check for collision
+        const intersects = raycaster.intersectObject( obstacle, true )
+        if( intersects.length > 0 ) {
+
+            // Collision point
+            const hitPoint = intersects[0].point;
+            // Distance from the wall
+            const hitDistance = intersects[0].distance;
+            console.log( "Dystans do sciany", hitDistance )
+
+            if( hitDistance < 11.55 ) {
+
+                // If ray hits the wall, set the camera before the wall
+                const cameraHitOffset = rayDirection.clone().multiplyScalar(-0.5); // Odwrócenie kierunku
+                newCameraPos.copy(hitPoint).add(cameraHitOffset);
+            }
+
+
+        }
+
+        camera.position.copy(newCameraPos);
+        controls.target.copy(objectMesh.position); // Set `OrbitControls` for the object
+        controls.update(); // Update `OrbitControls`
     }
 }
 

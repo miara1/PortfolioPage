@@ -9,6 +9,7 @@ import {
 import { Cube } from "../objects/Cube.js"
 import { player } from "../objects/Player.js"
 import { sweeperOne, startRandomBots } from "./BotTravel.js"
+import { factoryRoom } from "../objects/FactoryRoom.js"
 
 const segmentCount = 2;
 
@@ -21,6 +22,8 @@ const initObstacles = [ cube.mesh, cube2.mesh ];
 player.addObstacles(initObstacles);
 
 startRandomBots();
+
+const room = factoryRoom.getRoom();
 
 
 let i = 0;
@@ -37,7 +40,7 @@ function animate() {
     renderer.render(scene, camera);
 
     player.update();
-    followRotationWithOrbit( player.object );
+    followRotationWithOrbit( player.object, room );
 
     // Update sweeper animations
     sweeperOne.updateSweeperAnimation();
