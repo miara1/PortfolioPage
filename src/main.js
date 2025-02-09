@@ -1,5 +1,5 @@
-import { checkLoadModelThenAnimate } from "./objects/loadStaticGLTFModels"
+import { checkLoadModelThenAnimate } from "./objects/LoadStaticGLTFModels"
 
-// Start animation
-checkLoadModelThenAnimate()
+// Load models and start the main animation loop
+checkLoadModelThenAnimate();
 

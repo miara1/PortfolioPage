@@ -35,10 +35,11 @@ export function hideLoadingScreen() {
     }
 }
 
+// Show message on model loading error
 export function onLoadModelError() {
 
     if (loadingText) {
         clearInterval(loadingInterval);
-            loadingText.innerText = "Error: cannot load models"
+        loadingText.innerText = "Error: cannot load models";
     }
 }

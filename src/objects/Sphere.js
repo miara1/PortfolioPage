@@ -10,29 +10,30 @@ import { scene } from "../core/Core.js"
 class Sphere {
     constructor({color = "green", texture = null, radius = 1, position = { x: 0, y: 0, z: 0 }}) {
         // Create sphere geometry
-        this.geometry = new SphereGeometry(radius)
+        this.geometry = new SphereGeometry(radius);
 
         // Load texture if specified, else use color
         if (texture) {
-            const textureLoader = new TextureLoader()
-            const sphereTexture = textureLoader.load(texture)
-            this.material = new MeshStandardMaterial({ map: sphereTexture/*, side: BackSide*/})
+            const textureLoader = new TextureLoader();
+            const sphereTexture = textureLoader.load(texture);
+            this.material = new MeshStandardMaterial({ map: sphereTexture/*, side: BackSide*/});
         } else {
-            this.material = new MeshStandardMaterial({ color: color})
+            this.material = new MeshStandardMaterial({ color: color});
         }
 
         // Create mesh
-        this.mesh = new Mesh(this.geometry, this.material)
+        this.mesh = new Mesh(this.geometry, this.material);
 
         // Set object position
-        this.mesh.position.set(position.x, position.y, position.z)
+        this.mesh.position.set(position.x, position.y, position.z);
     
-        scene.add(this.mesh)
+        scene.add(this.mesh);
     }
 
-    rotateY(speedY = 0.01) {
-        this.mesh.rotation.y += speedY
+    // Rotate the sphere
+    rotateY( speedY = 0.01 ) {
+        this.mesh.rotation.y += speedY;
     }
 }
 
-export{ Sphere }
+export{ Sphere };

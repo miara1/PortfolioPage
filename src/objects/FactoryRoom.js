@@ -10,33 +10,41 @@ import {
     MeshStandardMaterial,
     PointLight,
     Scene,
-} from 'three';
-import { scene } from '../core/Core';
+} from 'three'
+import { scene } from '../core/Core'
 
-const SEGMENT_LENGTH = 28.591
-const SEGMENT_WIDTH = 31.713
-const SEGMENT_COUNT = 2
+const SEGMENT_LENGTH = 28.591;
+const SEGMENT_WIDTH = 31.713;
+const SEGMENT_COUNT = 2;
 
 class FactoryEnvironment extends Scene {
 
+    static instance = null;
+
     constructor() {
+
+        if( FactoryEnvironment.instance ) {
+            return FactoryEnvironment.instance;
+        }
 
         super();
 
+        // Set room geometry and material
         const geometry = new BoxGeometry();
         geometry.deleteAttribute('uv');
 
         const roomMaterial = new MeshStandardMaterial({ color: 'grey', side: BackSide });
         const boxMaterial = new MeshStandardMaterial();
 
-        const roomZPosition = -( SEGMENT_COUNT * SEGMENT_LENGTH - SEGMENT_LENGTH ) / 2
+        // Calculate room Z position in world coorinates
+        const roomZPosition = -( SEGMENT_COUNT * SEGMENT_LENGTH - SEGMENT_LENGTH ) / 2;
 
         const room = new Mesh(geometry, roomMaterial);
         room.position.set(0, 13.219, roomZPosition);
         room.scale.set(SEGMENT_WIDTH, 28.305, SEGMENT_COUNT * SEGMENT_LENGTH);
         this.add(room);
 
-        this.room = room
+        this.room = room;
 
         // +z
         const light4 = new Mesh(geometry, createAreaLightMaterial(43));
@@ -57,7 +65,7 @@ class FactoryEnvironment extends Scene {
         this.add(light6);
 
         for (let i = 0; i < SEGMENT_COUNT; i++) {
-            const zOffset = -i * SEGMENT_LENGTH; // Przesunięcie światła wzdłuż Z
+            const zOffset = -i * SEGMENT_LENGTH; // Z axis offset
         
             const mainLight = new PointLight(0xffffff, 900, 28, 2);
             mainLight.position.set(0.418, 16.199, 0.300 + zOffset);
@@ -82,8 +90,9 @@ class FactoryEnvironment extends Scene {
             this.add(light3);
         }
 
-        scene.add(this)
+        scene.add(this);
 
+        FactoryEnvironment.instance = this;
     }
 
     dispose() {
@@ -109,8 +118,17 @@ class FactoryEnvironment extends Scene {
 
     }
 
+    // Return room
     getRoom() {
-        return this.room
+        return this.room;
+    }
+
+    // Get instance of the class
+    static getInstance() {
+        if( !FactoryEnvironment.instance ) {
+            FactoryEnvironment.instance = new FactoryEnvironment();
+        }
+        return FactoryEnvironment.instance;
     }
 
 }
@@ -123,7 +141,8 @@ function createAreaLightMaterial(intensity) {
 
 }
 
-const factoryRoom = new FactoryEnvironment()
+// Create singleton of factory
+const factoryRoom = FactoryEnvironment.getInstance();
 
 export { FactoryEnvironment, factoryRoom };
 
