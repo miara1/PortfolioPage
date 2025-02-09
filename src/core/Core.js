@@ -84,7 +84,6 @@ function followRotationWithOrbit( objectMesh = null, obstacle = null ) {
             const hitPoint = intersects[0].point;
             // Distance from the wall
             const hitDistance = intersects[0].distance;
-            console.log( "Dystans do sciany", hitDistance )
 
             if( hitDistance < 11.55 ) {
 
@@ -105,6 +104,18 @@ function followRotationWithOrbit( objectMesh = null, obstacle = null ) {
 // Horizontal grid
 const gridHelper = new GridHelper(400, 100);
 scene.add(gridHelper);
+
+// Floor test
+gltfLoader.load( "../../static/GLTFModels/FactoryFloor/factoryFloor.gltf", (floor) => {
+    const model = floor.scene;
+    
+    model.position.set( 0, -0.566, 0 );
+    model.scale.set( 3.5, 3.5, 3.5 );
+    scene.add( model );
+
+    console.log( "!!Floor model added!!" );
+} )
+
 
 export { 
     scene,

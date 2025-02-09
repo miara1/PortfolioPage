@@ -26,6 +26,8 @@ startRandomBots();
 const room = factoryRoom.getRoom();
 
 
+
+
 let i = 0;
 
 function animate() {
