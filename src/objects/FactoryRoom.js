@@ -12,10 +12,11 @@ import {
     Scene,
 } from 'three'
 import { scene } from '../core/Core'
+import { SEGMENT_COUNT } from '../core/Constants'
+import { gltfLoader } from '../core/Core'
 
 const SEGMENT_LENGTH = 28.591;
 const SEGMENT_WIDTH = 31.713;
-const SEGMENT_COUNT = 2;
 
 class FactoryEnvironment extends Scene {
 
@@ -28,6 +29,19 @@ class FactoryEnvironment extends Scene {
         }
 
         super();
+
+        // Texture map
+        this.loadedModels = new Map();
+
+        gltfLoader.load("../../static/GLTFModels/FactoryWall/FactoryWall.gltf", (wall) => {
+            this.loadedModels.set('factoryWall', wall.scene);
+            console.log('FactoryWall loaded!', wall.scene.name);
+        });
+
+        gltfLoader.load("../../static/GLTFModels/FactoryFloor/factoryFloor.gltf", (floor) => {
+            this.loadedModels.set('factoryFloor', floor.scene);
+            console.log('FactoryFloor loaded!');
+        });
 
         // Set room geometry and material
         const geometry = new BoxGeometry();
@@ -64,6 +78,59 @@ class FactoryEnvironment extends Scene {
         light6.scale.set(1.0, 0.1, 1.0);
         this.add(light6);
 
+        // if( this.loadedModels.has( 'factoryWall' ) ) {
+
+        //     const frontWallClone = this.loadedModels.get( 'factoryWall' ).clone();
+            
+        //     frontWallClone.position.set( 0, 14, 14.25 );
+        //     frontWallClone.scale.set( 1.575, 1.6, 1.5 );
+        //     frontWallClone.rotation.x = Math.PI/2;
+        //     frontWallClone.rotation.z = 0;
+        //     // model.roation.y = Math.PI/2;
+        //     this.add( frontWallClone );
+        
+        //     console.log( "!!Front Wall model added!!" );
+
+        //     const backWallClone = this.loadedModels.get( 'factoryWall' ).clone();
+            
+        //     backWallClone.position.set( 0, 14, 14.25 - SEGMENT_COUNT * 28.5 );
+        //     backWallClone.scale.set( 1.575, 1.6, 1.5 );
+        //     backWallClone.rotation.x = Math.PI/2;
+        //     backWallClone.rotation.z = Math.PI;
+        //     // model.roation.y = Math.PI/2;
+        //     this.add( backWallClone );
+        
+        //     console.log( "!!Back Wall model added!!" );
+        // } else {
+        //     console.warn('!!!!There is no factory wall!!!!');
+        // }
+
+        gltfLoader.load( "../../static/GLTFModels/FactoryWall/FactoryWall.gltf", (wall) => {
+            const model = wall.scene;
+            
+            model.position.set( 0, 14, 14.25 );
+            model.scale.set( 1.575, 1.6, 1.5 );
+            model.rotation.x = Math.PI/2;
+            model.rotation.z = 0;
+            // model.roation.y = Math.PI/2;
+            this.add( model );
+        
+            console.log( "!!Wall model added!!" );
+        } )
+
+        gltfLoader.load( "../../static/GLTFModels/FactoryWall/FactoryWall.gltf", (wall) => {
+            const model = wall.scene;
+            
+            model.position.set( 0, 14, 14.25 - SEGMENT_COUNT * 28.5 );
+            model.scale.set( 1.575, 1.6, 1.5 );
+            model.rotation.x = Math.PI/2;
+            model.rotation.z = Math.PI;
+            // model.roation.y = Math.PI/2;
+            this.add( model );
+        
+            console.log( "!!Wall model added!!" );
+        } )
+
         for (let i = 0; i < SEGMENT_COUNT; i++) {
             const zOffset = -i * SEGMENT_LENGTH; // Z axis offset
         
@@ -88,6 +155,42 @@ class FactoryEnvironment extends Scene {
             light3.position.set(14.904, 12.198, -1.832 + zOffset);
             light3.scale.set(0.15, 4.265, 6.331);
             this.add(light3);
+
+            gltfLoader.load( "../../static/GLTFModels/FactoryFloorYellowLines/factoryFloorYellowLine.gltf", (floor) => {
+                const model = floor.scene;
+                
+                model.position.set( 0, -0.566, -( 2 + i * 32.55 ) );
+                model.scale.set( 3.3, 3.3, 3.3 );
+                this.add( model );
+            
+                console.log( "!!Floor model added!!" );
+            } );
+
+            gltfLoader.load( "../../static/GLTFModels/FactoryWall/FactoryWall.gltf", (wall) => {
+                const model = wall.scene;
+                
+                model.position.set( -15.8, 14, -( 0.65 + i * 31.5) );
+                model.scale.set( 1.575, 1.6, 1.5 );
+                model.rotation.x = Math.PI/2;
+                model.rotation.z = Math.PI/2;
+                // model.roation.y = Math.PI/2;
+                this.add( model );
+            
+                console.log( "!!Wall model added!!" );
+            } );
+
+            gltfLoader.load( "../../static/GLTFModels/FactoryWall/FactoryWall.gltf", (wall) => {
+                const model = wall.scene;
+                
+                model.position.set( 15.8, 14, -( 0.65 + i * 31.5) );
+                model.scale.set( 1.575, 1.6, 1.5 );
+                model.rotation.x = Math.PI/2;
+                model.rotation.z = -Math.PI/2;
+                // model.roation.y = Math.PI/2;
+                this.add( model );
+            
+                console.log( "!!Wall model added!!" );
+            } );
         }
 
         scene.add(this);

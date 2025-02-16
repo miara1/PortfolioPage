@@ -105,17 +105,6 @@ function followRotationWithOrbit( objectMesh = null, obstacle = null ) {
 const gridHelper = new GridHelper(400, 100);
 // scene.add(gridHelper);
 
-// Floor test
-gltfLoader.load( "../../static/GLTFModels/FactoryFloorYellowLines/factoryFloorYellowLine.gltf", (floor) => {
-    const model = floor.scene;
-    
-    model.position.set( 0, -0.566, -2 );
-    model.scale.set( 3.3, 3.3, 3.3 );
-    scene.add( model );
-
-    console.log( "!!Floor model added!!" );
-} )
-
 
 export { 
     scene,
