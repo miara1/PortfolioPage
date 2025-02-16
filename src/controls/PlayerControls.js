@@ -4,7 +4,7 @@ import { clock } from '../core/Core'
 class PlayerControls {
     constructor(object, room) {
 
-        this.object = object.mesh;
+        this.object = object;
         this.obstacles = [];
         this.room = room;
 
@@ -21,6 +21,8 @@ class PlayerControls {
         this.gravity = new Vector3(0, -9.81, 0);
         this.isGrounded = false;
 
+        this.isReady = false;
+
         this.keys = {
             w: false,
             a: false,
@@ -31,7 +33,7 @@ class PlayerControls {
             ArrowDown: false,
             ArrowRight: false
         };
-
+        this.isReady = true;
         this.setupEventListeners();
     }
 
@@ -107,6 +109,7 @@ class PlayerControls {
     }
 
     update() {
+        if( !this.isReady ) return;
         // Time in seconds since last frame
         const deltaTime = clock.getDelta();
 
@@ -136,11 +139,11 @@ class PlayerControls {
         const collision = this.checkCollisionRoom( direction.clone() );
 
         // Move forwards/backwards
-        if ((this.keys.w || this.keys.ArrowUp) && collision !== "forward") {
+        if ((this.keys.s || this.keys.ArrowDown) && collision !== "forward") {
             this.velocity.add(direction.clone().multiplyScalar(this.acceleration * deltaTime));
         }
 
-        if ((this.keys.s || this.keys.ArrowDown) && collision !== "backward") {
+        if ((this.keys.w || this.keys.ArrowUp) && collision !== "backward") {
             this.velocity.add(direction.clone().multiplyScalar(-this.acceleration * deltaTime));
         }
 
@@ -193,16 +196,21 @@ class PlayerControls {
     }
 
     addObstacles( obstacle ) {
+        if( !this.isReady ) return;
         // Initialize obstaces tab if empty
         if( !this.obstacles ) {
             this.obstacles = [];
         }
-
+        if( this.obstacles ) {
         // Obstacle is always converted to an array
         ([]).concat.apply( obstacle ).forEach( obj => {
             this.obstacles.push( obj );
             console.log( "Obstacle added:", obj );
         })
+        } else {
+
+            console.log("No obstacles for addObstacles to a player");
+        }
     }
 }
 

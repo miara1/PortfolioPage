@@ -66,7 +66,7 @@ const rayDirection = new Vector3(); // Ray direction
 
 function followRotationWithOrbit( objectMesh = null, obstacle = null ) {
     if( objectMesh ) {
-        const offset = new Vector3( 0, 5, 10 ); // Camera position behind object
+        const offset = new Vector3( 0, 5, -10 ); // Camera position behind object
         offset.applyQuaternion(objectMesh.quaternion); // Rotate offset with camera rotation
         
         let newCameraPos = objectMesh.position.clone().add(offset); // New camera position
@@ -103,7 +103,7 @@ function followRotationWithOrbit( objectMesh = null, obstacle = null ) {
 
 // Horizontal grid
 const gridHelper = new GridHelper(400, 100);
-scene.add(gridHelper);
+// scene.add(gridHelper);
 
 // Floor test
 gltfLoader.load( "../../static/GLTFModels/FactoryFloorYellowLines/factoryFloorYellowLine.gltf", (floor) => {

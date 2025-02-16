@@ -1,5 +1,4 @@
-import { animate } from "../animation/Animation"
-import { scene, clock, gltfLoader } from "../core/Core"
+import { scene, gltfLoader } from "../core/Core"
 import { 
     showLoadingScreen,
     hideLoadingScreen,
@@ -10,6 +9,7 @@ import { AnimationMixer, LoopRepeat } from "three"
 
 const modelUrls = [
     { url: "../../static/GLTFModels/Tables/scene.gltf", position: { x: 0, y: 0, z: -5 }, scale: 5, animation: null },
+    { url: "../../static/GLTFModels/robotPlayer/robot_striker_f_ax.gltf", position: { x: 0, y: -0.566, z: 0 }, scale: 3, animation: null }
 ];
 
 const mixers = [];
@@ -29,7 +29,7 @@ function loadModel(modelData) {
             scene.add( model );
 
             // Log succes to console
-            console.log( `Model loaded succesfully: ${modelData.url}` );
+            console.log( `Model loaded succesfully: ${modelData.url}, ${model.name}` );
 
             // Check for the specified animation. Load if exists
             if( modelData.animation ) {
@@ -74,7 +74,7 @@ export function checkLoadModelThenAnimate() {
     showLoadingScreen();
 
     // Load models, checking if correct
-    Promise.all( modelUrls.map( loadModel ) )
+    return Promise.all( modelUrls.map( loadModel ) )
     .then(() => {
 
         console.log( "All models loaded succesfully!" );
@@ -82,8 +82,6 @@ export function checkLoadModelThenAnimate() {
         // Hide loading screen
         hideLoadingScreen();
 
-        // Start main animation loop
-        animate();
     })
     .catch( error => {
         

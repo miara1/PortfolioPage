@@ -1,9 +1,13 @@
 import { SweeperRobot } from "../objects/SweeperRobot.js"
+import {
+    SEGMENT_COUNT,
+    SEGMENT_TRAVEL_LENGTH,
+    ROT_MINUS_Z,
+    ROT_Z,
+    
+} from "../core/Constants.js";
 
-const SEGMENT_TRAVEL_LENGTH = 20;
-const SEGMENT_COUNT = 2;
-const ROT_MINUS_Z = Math.PI;
-const ROT_Z = 0;
+
 
 const sweeperStartPos = [
     { x: -10, y: -1, z: -45.5, rot: ROT_Z },
@@ -13,9 +17,10 @@ const sweeperStartPos = [
 
 const i = 1;
 
-const sweeperOne = new SweeperRobot( sweeperStartPos[i].x, sweeperStartPos[i].y, sweeperStartPos[i].z, 0, -1, 0, "Scene" );
+let sweeperOne = null;
 
 function startRandomBots() {
+    sweeperOne = new SweeperRobot( sweeperStartPos[i].x, sweeperStartPos[i].y, sweeperStartPos[i].z, 0, -1, 0, "Scene" );
     setInterval(() =>{
         console.log( "A bot has appeared!" );
 

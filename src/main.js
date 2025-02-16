@@ -1,4 +1,4 @@
-import { checkLoadModelThenAnimate } from "./objects/LoadStaticGLTFModels"
+import { Start } from "./core/Start";
 
-// Load models and start the main animation loop
-checkLoadModelThenAnimate();
+// Start!
+Start();
